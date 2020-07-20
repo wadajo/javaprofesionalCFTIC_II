@@ -40,7 +40,7 @@ public class Home {
 				break;
 			case 5:
 				System.out.println("Pedidos pendientes: ");
-				servicio.mostrarPendientes();
+				servicio.mostrarPendientes().forEach(p->System.out.println(p));
 				break;			
 			case 6:	
 				System.out.println("Introduce parte del nombre de los productos a procesar: ");

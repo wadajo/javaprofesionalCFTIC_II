@@ -23,12 +23,13 @@ public class PedidosService {
 				out.println(p1.getId()+SEPARADOR+p1.getProducto()+SEPARADOR+p1.getPrecio());
 				return true;
 			} catch (FileNotFoundException ex){
-				System.out.println("El directorio es incorrecto.");
+				System.out.println("El directorio es incorrecto. Se ha creado.");
+				crearFichero();
 				ex.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
+		} 
 		return false;
 	}
 		
@@ -41,12 +42,12 @@ public class PedidosService {
 				// ; de ahí, saco el primer elemento
 				// (el 0), que sé que es el ID; lo parseo a Int
 				String id=linea.split(SEPARADOR)[0];
-				if (id==p1.getId()) {
+				if (id.equalsIgnoreCase(p1.getId())) {
+					System.out.println("Ese ID ya ha sido utilizado por otro producto.");
 					return true;
 				}
 			}			
 		} catch (IOException e) {
-			System.out.println("Se ha producido un error.");
 			e.printStackTrace();
 		}
 		return false;
@@ -157,13 +158,20 @@ public class PedidosService {
 	}
 	
 	private void volcarPedidos (List<Pedido> pedidos) {
-		List<Pedido> lista = mostrarPendientes();
 		try(FileOutputStream fos = new FileOutputStream(RUTA, false); //sobreescritura del txt
 				PrintStream out = new PrintStream(fos)){
-			lista.forEach(p->out.println(p.getId()+SEPARADOR+
+			pedidos.forEach(p->out.println(p.getId()+SEPARADOR+
 										p.getProducto()+SEPARADOR+
 										p.getPrecio()));			
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void crearFichero() {
+		try (PrintStream out = new PrintStream(RUTA)){
+			
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
