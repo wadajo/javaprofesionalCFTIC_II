@@ -39,14 +39,11 @@ public class Agenda {
 
 	private static void eliminar(AgendaService servicio) {
 		Scanner sc = new Scanner(System.in);
-		System.out.println("Ingresa part del email del contacto que deseas eliminar: ");
+		System.out.println("Ingresa parte del email del contacto que deseas eliminar: ");
 		String busqueda = sc.nextLine();
-		if (null!=servicio.buscarContacto(busqueda)) {
-			Contacto encontrado = servicio.buscarContacto(busqueda);
-			servicio.eliminarContacto(encontrado);
-			System.out.println("Se ha eliminado el contacto siguiente: "+encontrado);
+		servicio.eliminarContacto(busqueda);
+		System.out.println("Se ha eliminado el contacto. ");
 		}
-	}
 
 	private static void mostrar(AgendaService servicio) {
 		servicio.mostrarContactos();
@@ -70,8 +67,7 @@ public class Agenda {
 		String email = sc.nextLine();
 		System.out.println("Añade su teléfono: ");
 		String telefono = sc.nextLine();
-		Contacto c1 = new Contacto(nombre, email, telefono);
-		if (servicio.agregarContacto(c1)) {
+		if (servicio.agregarContacto(nombre,email,telefono)) {
 			System.out.println("Has añadido un contacto con éxito.");
 		} else {
 			System.out.println("Ya has añadido ese contacto. Ingresa uno nuevo.");
