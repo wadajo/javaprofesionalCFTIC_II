@@ -1,6 +1,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,23 +27,49 @@ public class PersonasService {
 			.sorted((n1,n2)->n1.getEdad()-n2.getEdad())
 			.findFirst().get();
 		
+		// también podía ser .stream().min(p1,p2)->(p.getEdad()-p2.getEdad()).orElse(null)
+		
 		return masJoven;
 	}
-	//TODO el n�mero de personas cuya edad es superior a la media
+	// el n�mero de personas cuya edad es superior a la media
 	public int superiorMedia() {
+		double media=
+		personas
+			.stream()
+			.mapToDouble(n->n.getEdad())
+			.average()
+			.orElse(0);
+		return(int) personas.stream()
+							.filter(p->p.getEdad()>media)
+							.count();
 		
 	}
-	//TODO personas ordenadas por edad
+	// personas ordenadas por edad
 	public List<Persona> ordenadasPorEdad(){
-		
+		return personas.stream()
+				.sorted((n1,n2)->n1.getEdad()-n2.getEdad())
+				.collect(Collectors.toList());
 	}
-	//TODO lista nombres de personas
+	// ordenadas primero por nombre y luego por edad, dos criterios en dos Comparator distintos
+	public List<Persona> ordenadasPorNombreYEdad(){
+		Comparator<Persona> comp1 = (p1,p2)->p1.getNombre().compareTo(p2.getNombre());
+		Comparator<Persona> comp2 = (p1,p2)->p1.getEdad()-p2.getEdad();
+		return personas.stream()
+				.sorted(comp1.thenComparing(comp2))
+				.collect(Collectors.toList());
+	}
+	
+	// lista nombres de personas
 	public List<String> nombres(){
-		
+		return personas.stream()
+						.map(p->p.getNombre())
+						.collect(Collectors.toList());
 	}
 	//TODO dominio sea igual al indicado
-	public List<Persona> personasDominio(String dominio){
-		
+	public List<Persona> personasDominio(String dominio){		
+		return personas.stream()
+						.filter(p->p.getEmail().endsWith(dominio.toLowerCase()))
+						.collect(Collectors.toList());
 	}
 	
 	
