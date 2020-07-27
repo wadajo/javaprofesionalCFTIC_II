@@ -1,6 +1,2 @@
-P01-Cama-44
-P02-Cama-30
 P03-Lámpara-55
-P04-Cama-44
-P01-Cama-30
 P01-Bici-44

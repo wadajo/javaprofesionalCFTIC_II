@@ -3,19 +3,19 @@ package model;
 import java.util.Date;
 
 public class Caso {
-	private String comunidad;
+	private String ccaa_iso;
 	private Date fecha;
-	private int casos;
+	private int num_casos;
 	
 	
 	public Caso(String comunidad, Date fecha, int casos) {
 		this.setComunidad(comunidad);
 		this.fecha = fecha;
-		this.casos = casos;
+		this.num_casos = casos;
 	}
 	
 	public String getComunidad() {		
-		return comunidad;
+		return ccaa_iso;
 	}
 	public void setComunidad(String comunidad) {
 		String comunidadFull=null;
@@ -81,7 +81,7 @@ public class Caso {
 				comunidadFull="S-D";
 				break;
 		}		
-		this.comunidad = comunidadFull;
+		this.ccaa_iso = comunidadFull;
 	}
 	public Date getFecha() {
 		return fecha;
@@ -90,9 +90,9 @@ public class Caso {
 		this.fecha = fecha;
 	}
 	public int getCasos() {
-		return casos;
+		return num_casos;
 	}
 	public void setCasos(int casos) {
-		this.casos = casos;
+		this.num_casos = casos;
 	}
 }

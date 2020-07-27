@@ -2,6 +2,11 @@ package util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Locale;
 import model.Caso;
 
@@ -25,4 +30,16 @@ public class Utilidades {
 	public static String devolverCasoDsdPedido (Caso casoPedido, String separador) {		
 		return casoPedido.getComunidad()+separador+personalizado.format(casoPedido.getFecha())+separador+casoPedido.getCasos();		
 }
+	
+	public static LocalDate devolverEnLocalDate (Date vieja) {
+		return Instant.ofEpochMilli(vieja.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+	
+	public static LocalDateTime devolverEnLocalDateTime (Date vieja) {
+		return Instant.ofEpochMilli(vieja.getTime()).atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
+	}
+	
+	public static Date devolverEnDate (LocalDate nueva) {		
+		return Date.from(nueva.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
 }

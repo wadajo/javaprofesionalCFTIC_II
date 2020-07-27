@@ -45,7 +45,7 @@ public class Presentacion {
 		System.out.println(fechaEnDate);
 		System.out.println(fechaEnLD);
 		servicio.pedidosRangoFecha(fechaEnLD, Period.ofYears(5))
-			.forEach(p->System.out.println(p.getProducto()));
+			.forEach(p->System.out.println("Pedidos registrados entre "+fechaEnLD+" y 5 años después: "+p.getProducto()));
 	}
 
 }
