@@ -113,8 +113,7 @@ public class GestorPedidos {
 		LocalDate fechaFinal = fechaInicial.plus(periodo);
 		return streamPedidos()
 				.filter(p->p.getFecha().after((Utilidades.devolverEnDate(fechaInicial)))&&p.getFecha().before((Utilidades.devolverEnDate(fechaFinal))))
-				.collect(Collectors.toList());
-		
+				.collect(Collectors.toList());		
 	}
 	
 	private Stream<Pedido> streamPedidos(){
@@ -123,7 +122,7 @@ public class GestorPedidos {
 					.map(p->(Utilidades.devolverPedidoDsdString(p, SEPARADOR)));
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+			return Stream.empty();
 		}
 	}
 

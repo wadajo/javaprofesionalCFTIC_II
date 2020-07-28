@@ -2,6 +2,8 @@ package principal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import model.Pedido;
 import model.PedidoTienda;
@@ -10,7 +12,9 @@ import service.GestorPedidosTotales;
 
 public class Tarea implements Runnable {
 	String nombreTienda;
-	String ruta;
+	String ruta=""; //antes daba NullPointerException
+	static Lock lc=new ReentrantLock();
+	
 	public Tarea(String nombreTienda, String ruta) {
 		super();
 		this.nombreTienda = nombreTienda;
@@ -22,7 +26,9 @@ public class Tarea implements Runnable {
 	
 	@Override
 	public void run() {		
-		ejecutar(nombreTienda);		
+		lc.lock();
+		ejecutar(nombreTienda);	
+		lc.unlock();
 	}
 	
 	private void ejecutar (String nombreTienda) {
