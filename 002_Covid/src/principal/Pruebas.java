@@ -43,10 +43,10 @@ public class Pruebas {
 			unDia=personalizado.parse("2020-03-20");
 			LocalDate unDiaLD = Utilidades.devolverEnLocalDate(unDia);
 			System.out.println("Casos en el día "+unDiaLD.format(mostrar)+" en todo el país: "+servicio.casosEnUnDia(unDia));
-			/*
+			
 			System.out.println("La fecha pico de contagios fue: "+Utilidades.devolverEnLocalDate(servicio.fechaPicoContagiosV2()).format(mostrar)+
 			" con "+servicio.casosEnUnDia(servicio.fechaPicoContagiosV2())+ " casos.");
-			*/
+			
 			//System.out.println("El promedio diario de casos registrados en España ha sido: "+servicio.mediaDiaria()+" casos.");
 			System.out.println("La comunidad de "+ccaa+" registró en este período un total de "+servicio.totalPositivos(ccaa)+
 			" casos.");

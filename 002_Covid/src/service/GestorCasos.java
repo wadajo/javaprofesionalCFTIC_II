@@ -54,8 +54,7 @@ public class GestorCasos {
 				//.collect();
 	}
 	*/ 
-	// esto da el valor máximo, que corresponde a una Comunidad, sin agrupar valores nacionales x día
-	// no es correcto
+	// forma correcta, alternativa a la vista en clase
 	public Date fechaPicoContagiosV2() {
 		return streamCasos()
 			.max((d1,d2)->casosEnUnDia(d1.getFecha())-casosEnUnDia(d2.getFecha()))
