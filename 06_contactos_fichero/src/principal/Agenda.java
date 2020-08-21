@@ -56,6 +56,8 @@ public class Agenda {
 		if (null!=servicio.buscarContacto(busqueda)) {
 			Contacto encontrado = servicio.buscarContacto(busqueda);
 			System.out.println("Se ha encontrado el contacto. Sus datos son: \n"+encontrado);
+		} else {
+			System.out.println("No se ha encontrado el contacto.");
 		}
 	}
 

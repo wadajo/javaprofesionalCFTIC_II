@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NotasService {
-	String ruta = "prueba.txt";
+	String ruta = "/Users/usuario/Documents/notas.txt";
 	
 	public void ingresarNota (double nota) {
 		try(FileOutputStream fos = new FileOutputStream(ruta, true);

@@ -14,7 +14,7 @@ import model.Contacto;
 
 public class AgendaService {
 	List<Contacto> misContactos = new ArrayList<>();
-	String ruta = "prueba.txt";
+	String ruta = "/Users/usuario/Documents/06-agenda.txt";
 	String ruta2 = "prueba_bis.txt";
 	static StringBuilder nombre = new StringBuilder("");
 	static StringBuilder email = new StringBuilder("");
@@ -57,11 +57,25 @@ public class AgendaService {
 	}
 	
 	public Contacto buscarContacto(String busqueda) {
-		for (Contacto c : misContactos) {
-			if (c.getEmail().contains(busqueda))
-				return c;
-			else System.out.println("No existe un contacto con ese email");
+		List<Contacto> misContactosBuscar = new ArrayList<>();
+		try (FileReader fr = new FileReader(ruta);
+				BufferedReader br = new BufferedReader(fr)){
+					String linea=br.readLine();
+					while(null!=linea) {
+						String[] datos = linea.split("--");
+						misContactosBuscar.add(new Contacto(datos[0],datos[1],datos[2]));
+						linea=br.readLine();
+					}
+					for (Contacto c : misContactosBuscar) {
+						if (c.getEmail().contains(busqueda))
+							return c;						
+					}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		
 		return null;		
 	}	
 	

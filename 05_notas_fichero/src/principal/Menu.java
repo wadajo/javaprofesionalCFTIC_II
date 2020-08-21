@@ -23,7 +23,7 @@ public class Menu {
 			System.out.println("La media de las notas es: "+servicio.calcularMedia());
 			break;
 		case 3:
-			System.out.println("Ha habido "+servicio.calcularAprobados()+" aprobados.");
+			System.out.println("Ha habido "+servicio.calcularAprobados()+" aprobados(más de 6(seis)).");
 			break;
 		case 4:
 			System.out.println("Estas son todas las notas registradas: ");
