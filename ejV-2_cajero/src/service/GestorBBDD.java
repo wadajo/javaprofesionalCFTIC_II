@@ -4,17 +4,152 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import model.Cuenta;
 import model.Movimiento;
+import model.Titular;
 
 public class GestorBBDD {
-	public boolean existeCuenta (int cuenta){
+	public boolean crearTitular(Titular titular) {
+		try (Connection conn=Datos.getConnection()){
+			String sql="INSERT INTO bancabd.clientes VALUES (?,?,?,?)";
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, titular.getDni());
+			ps.setString(2, titular.getNombre());
+			ps.setString(3, titular.getDireccion());
+			ps.setInt(4, titular.getTelefono());
+			ps.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public boolean crearCuenta(Cuenta nueva) {
+		try (Connection conn=Datos.getConnection()){
+			String sql1="INSERT INTO bancabd.cuentas VALUES (?,?,?)";
+			String sql2="INSERT INTO bancabd.titulares VALUES (?,?)";
+			String sql3="INSERT INTO bancabd.clientes VALUES (?,?,?,?)";
+			
+			PreparedStatement ps1 = conn.prepareStatement(sql1);
+			ps1.setInt(1, nueva.getId());
+			ps1.setInt(2, 0);
+			ps1.setString(3, nueva.getTipoCuenta());
+			ps1.execute();
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			ps2.setInt(1, nueva.getId());
+			ps2.setInt(2, nueva.getT().getDni());
+			ps2.execute();
+			PreparedStatement ps3 = conn.prepareStatement(sql3);
+			ps3.setInt(1, nueva.getT().getDni());
+			ps3.setString(2, nueva.getT().getNombre());
+			ps3.setString(3, nueva.getT().getDireccion());
+			ps3.setInt(4, nueva.getT().getTelefono());
+			ps3.execute();			
+				return true;				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("No se ha podido crear la cuenta, inténtalo de nuevo.");
+		return false;
+	}
+	public boolean crearCuenta(Cuenta nueva, Titular existente) {
+		try (Connection conn=Datos.getConnection()){
+			String sql1="INSERT INTO bancabd.cuentas VALUES (?,?,?)";
+			String sql2="INSERT INTO bancabd.titulares VALUES (?,?)";			
+			
+			PreparedStatement ps1 = conn.prepareStatement(sql1);
+			ps1.setInt(1, nueva.getId());
+			ps1.setInt(2, 0);
+			ps1.setString(3, nueva.getTipoCuenta());
+			ps1.execute();
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			ps2.setInt(1, nueva.getId());
+			ps2.setInt(2, nueva.getT().getDni());
+			ps2.execute();			
+				return true;				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("No se ha podido crear la cuenta, inténtalo de nuevo.");
+		return false;
+	}
+	public boolean sumarTitularACuenta(Titular t, Cuenta existente) {
+		try (Connection conn=Datos.getConnection()){			
+			String sql="INSERT INTO bancabd.titulares VALUES (?,?)";
+						
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, existente.getId());
+			ps.setInt(2, t.getDni());
+			ps.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public List<Cuenta> mostrarCuentas () {
+		List<Cuenta> cuentas = new ArrayList<>();
+		try (Connection conn=Datos.getConnection()){
+			String sql="SELECT idCuenta AS id,dni,nombre,direccion,telefono,saldo,tipocuenta "
+					+ "FROM bancabd.titulares INNER JOIN bancabd.clientes ON clientes.dni=titulares.idCliente "
+					+ "INNER JOIN bancabd.cuentas ON cuentas.numeroCuenta=titulares.idCuenta";
+			PreparedStatement ps = conn.prepareStatement(sql);						
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				int saldo = rs.getInt("saldo");
+				String tipoCuenta = rs.getString("tipocuenta");
+				Titular t = new Titular(
+						rs.getInt("dni"),
+						rs.getString("nombre"),
+						rs.getString("direccion"),
+						rs.getInt("telefono"));				
+				Cuenta unaCuenta = new Cuenta(id,t,saldo,tipoCuenta);
+				cuentas.add(unaCuenta);
+			}
+			return cuentas;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
+	}/*
+	public List<Cuenta> mostrarCuentasNew() {
+		List<Cuenta> cuentas = new ArrayList<>();
+		Cuenta existente=new Cuenta();
+		List<Titular> titulares=new ArrayList<>();
+		int nroCuenta=0;
+		int dni=0;
+		int saldo=0;
+		String tipoCuenta="";
+		try (Connection conn=Datos.getConnection()){
+			String sql="SELECT numeroCuenta,saldo,tipocuenta,idCliente FROM bancabd.cuentas INNER JOIN bancabd.titulares \n" + 
+					"ON cuentas.numeroCuenta=titulares.idCuenta";
+			PreparedStatement ps = conn.prepareStatement(sql);			
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				nroCuenta=rs.getInt("numeroCuenta");
+				saldo=rs.getInt("saldo");
+				tipoCuenta=rs.getString("tipocuenta");
+				dni=rs.getInt("idCliente");
+				titulares.add(recuperarTitular(dni));
+				existente=new Cuenta(nroCuenta,titulares,saldo,tipoCuenta);
+				cuentas.add(existente);
+			}
+			return cuentas;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
+	}*/
+	
+	/*old
+	public boolean existeCuentaB (int cuenta){
 		try (Connection conn=Datos.getConnection()){
 			String sql="SELECT * FROM bancabd.cuentas WHERE numeroCuenta=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -27,7 +162,46 @@ public class GestorBBDD {
 			e.printStackTrace();
 		}
 		return false;
-	}	
+	}*/
+	public Cuenta existeCuenta (int cuenta){
+		Cuenta existente=null;
+		Titular t1=new Titular();
+		List<Titular> titulares=new ArrayList<>();
+		int dni=0;
+		int saldo=0;
+		String tipoCuenta="";
+		try (Connection conn=Datos.getConnection()){
+			String sql="SELECT numeroCuenta,saldo,tipocuenta,idCliente FROM bancabd.cuentas INNER JOIN bancabd.titulares \n" + 
+					"ON cuentas.numeroCuenta=titulares.idCuenta WHERE idCuenta=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, cuenta);			
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				saldo=rs.getInt("saldo");
+				tipoCuenta=rs.getString("tipocuenta");
+				dni=rs.getInt("idCliente");
+				if (rs.getRow()>1) {
+					titulares.add(recuperarTitular(dni));
+					existente=new Cuenta(cuenta,titulares,saldo,tipoCuenta);
+				} else {
+					t1=recuperarTitular(dni);
+					existente=new Cuenta(cuenta,t1,saldo,tipoCuenta);
+				}					
+			}	
+			return existente;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/*public boolean variosTitulares (int cuentaAComprobar) {
+		Cuenta aComprobar=existeCuenta(cuentaAComprobar);
+		if (null!=aComprobar) {
+			if (aComprobar.getTitulares().size()>1) 
+				return true;			
+		} 
+		return false;
+	}*/
 	public boolean ingresar (int cuenta, int dinero) {
 		Movimiento m1 = new Movimiento(cuenta,LocalDateTime.now(),dinero,"ingreso");
 		try (Connection conn=Datos.getConnection()){			
@@ -104,6 +278,27 @@ public class GestorBBDD {
 		}
 		return 0;
 	}
+	public Titular recuperarTitular(int dni) {
+		Titular t1 = null;
+		try (Connection conn=Datos.getConnection()){
+			String sql="SELECT nombre,direccion,telefono FROM bancabd.clientes "
+					+ "WHERE dni=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, dni);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				t1 = new Titular(
+						dni,
+						rs.getString("nombre"),
+						rs.getString("direccion"),
+						rs.getInt("telefono"));
+			}
+			return t1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	private boolean comprobarSaldoSuficiente (int cuenta, int retira) throws SQLException {
 		if (saldoActual(cuenta)>retira) return true;
 		else return false;
@@ -133,5 +328,9 @@ public class GestorBBDD {
 		if (registrarMovimiento(m))
 			return true;
 		return false;			
-	}	
+	}
+	
+	
+
+		
 }

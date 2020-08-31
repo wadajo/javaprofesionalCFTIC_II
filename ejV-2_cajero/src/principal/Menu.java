@@ -16,7 +16,7 @@ public class Menu {
 		System.out.println("--Cajero Virtual--");
 		System.out.println("Para continuar, introduce tu número de cuenta.");
 		int cuenta = Integer.parseInt(sc.nextLine());
-		if (servicio.existeCuenta(cuenta)) {
+		if (null!=servicio.existeCuenta(cuenta)) {
 			System.out.println("Bienvenido de nuevo.");
 		do {
 			menu();
@@ -48,7 +48,7 @@ public class Menu {
 			case 5:
 				System.out.println("Introduzca el número de cuenta de destino: ");
 				int destino=Integer.parseInt(sc.nextLine());
-				if (servicio.existeCuenta(destino)) {
+				if (null!=servicio.existeCuenta(destino)) {
 					System.out.println("Ingrese la cantidad a transferir");
 					if (servicio.transferir(cuenta,destino,Integer.parseInt(sc.nextLine())))
 							System.out.println("Se realizó la transferencia correctamente.");;
