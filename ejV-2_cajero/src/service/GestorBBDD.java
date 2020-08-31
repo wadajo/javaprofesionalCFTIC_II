@@ -95,6 +95,7 @@ public class GestorBBDD {
 	}
 	public List<Cuenta> mostrarCuentas () {
 		List<Cuenta> cuentas = new ArrayList<>();
+		List<Titular> titulares=new ArrayList<>();
 		try (Connection conn=Datos.getConnection()){
 			String sql="SELECT idCuenta AS id,dni,nombre,direccion,telefono,saldo,tipocuenta "
 					+ "FROM bancabd.titulares INNER JOIN bancabd.clientes ON clientes.dni=titulares.idCliente "
@@ -105,12 +106,12 @@ public class GestorBBDD {
 				int id = rs.getInt("id");
 				int saldo = rs.getInt("saldo");
 				String tipoCuenta = rs.getString("tipocuenta");
-				Titular t = new Titular(
+				titulares.add(new Titular(
 						rs.getInt("dni"),
 						rs.getString("nombre"),
 						rs.getString("direccion"),
-						rs.getInt("telefono"));				
-				Cuenta unaCuenta = new Cuenta(id,t,saldo,tipoCuenta);
+						rs.getInt("telefono")));				
+				Cuenta unaCuenta = new Cuenta(id,titulares,saldo,tipoCuenta);
 				cuentas.add(unaCuenta);
 			}
 			return cuentas;
@@ -118,58 +119,11 @@ public class GestorBBDD {
 			e.printStackTrace();
 		}
 		return new ArrayList<>();
-	}/*
-	public List<Cuenta> mostrarCuentasNew() {
-		List<Cuenta> cuentas = new ArrayList<>();
-		Cuenta existente=new Cuenta();
-		List<Titular> titulares=new ArrayList<>();
-		int nroCuenta=0;
-		int dni=0;
-		int saldo=0;
-		String tipoCuenta="";
-		try (Connection conn=Datos.getConnection()){
-			String sql="SELECT numeroCuenta,saldo,tipocuenta,idCliente FROM bancabd.cuentas INNER JOIN bancabd.titulares \n" + 
-					"ON cuentas.numeroCuenta=titulares.idCuenta";
-			PreparedStatement ps = conn.prepareStatement(sql);			
-			ResultSet rs=ps.executeQuery();
-			while(rs.next()) {
-				nroCuenta=rs.getInt("numeroCuenta");
-				saldo=rs.getInt("saldo");
-				tipoCuenta=rs.getString("tipocuenta");
-				dni=rs.getInt("idCliente");
-				titulares.add(recuperarTitular(dni));
-				existente=new Cuenta(nroCuenta,titulares,saldo,tipoCuenta);
-				cuentas.add(existente);
-			}
-			return cuentas;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return new ArrayList<>();
-	}*/
-	
-	/*old
-	public boolean existeCuentaB (int cuenta){
-		try (Connection conn=Datos.getConnection()){
-			String sql="SELECT * FROM bancabd.cuentas WHERE numeroCuenta=?";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, cuenta);			
-			ResultSet rs=ps.executeQuery();
-			while(rs.next()) {
-				return true;	
-			}					
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}*/
+	}
 	public Cuenta existeCuenta (int cuenta){
-		Cuenta existente=null;
-		Titular t1=new Titular();
-		List<Titular> titulares=new ArrayList<>();
-		int dni=0;
 		int saldo=0;
 		String tipoCuenta="";
+		List<Titular> titulares=new ArrayList<>();		
 		try (Connection conn=Datos.getConnection()){
 			String sql="SELECT numeroCuenta,saldo,tipocuenta,idCliente FROM bancabd.cuentas INNER JOIN bancabd.titulares \n" + 
 					"ON cuentas.numeroCuenta=titulares.idCuenta WHERE idCuenta=?";
@@ -179,34 +133,19 @@ public class GestorBBDD {
 			while(rs.next()) {
 				saldo=rs.getInt("saldo");
 				tipoCuenta=rs.getString("tipocuenta");
-				dni=rs.getInt("idCliente");
-				if (rs.getRow()>1) {
-					titulares.add(recuperarTitular(dni));
-					existente=new Cuenta(cuenta,titulares,saldo,tipoCuenta);
-				} else {
-					t1=recuperarTitular(dni);
-					existente=new Cuenta(cuenta,t1,saldo,tipoCuenta);
-				}					
+				var dni=rs.getInt("idCliente");
+				titulares.add(recuperarTitular(dni));													
 			}	
-			return existente;
+			return new Cuenta(cuenta,titulares,saldo,tipoCuenta);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	/*public boolean variosTitulares (int cuentaAComprobar) {
-		Cuenta aComprobar=existeCuenta(cuentaAComprobar);
-		if (null!=aComprobar) {
-			if (aComprobar.getTitulares().size()>1) 
-				return true;			
-		} 
-		return false;
-	}*/
 	public boolean ingresar (int cuenta, int dinero) {
 		Movimiento m1 = new Movimiento(cuenta,LocalDateTime.now(),dinero,"ingreso");
 		try (Connection conn=Datos.getConnection()){			
-			modificarSaldo(m1);
-			//registrarMovimiento(m1);						
+			modificarSaldo(m1);					
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -218,7 +157,6 @@ public class GestorBBDD {
 		if (comprobarSaldoSuficiente(cuenta, dinero)) {
 			Movimiento m1 = new Movimiento(cuenta,LocalDateTime.now(),dinero,"extracción");
 				modificarSaldo(m1);
-				//registrarMovimiento(m1);
 				return true;
 			}
 		} catch (SQLException e) {

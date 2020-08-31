@@ -43,16 +43,6 @@ public class Administrador {
 					else
 						System.out.println("No se ha podido añadir el Titular a la cuenta deseada.");
 					break;
-				case 4:
-					System.out.println("Estas son las cuentas existentes: ");
-					servicio.mostrarCuentas()
-						.forEach(c->{
-							System.out.println("\nCuenta nº: "+c.getId());
-							System.out.println("Titular: "+c.getT().getNombre());								
-							System.out.println("Saldo: "+c.getSaldo());
-							System.out.println("Tipo de cuenta: "+c.getTipoCuenta());
-						});
-					break;
 				case 0:
 					System.out.println("Has salido. ¡Hasta luego!");
 					break;
@@ -151,7 +141,6 @@ private static boolean agregarCliente() {
 		System.out.println("\n1. Añadir nueva cuenta.");
 		System.out.println("2. Añadir nuevo cliente.");
 		System.out.println("3. Asociar titular a una cuenta existente.");
-		System.out.println("4. Ver todas las cuentas existentes.");
 		System.out.println("0. Salir");
 	}
 

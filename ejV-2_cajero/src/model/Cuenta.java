@@ -5,25 +5,23 @@ import java.util.List;
 public class Cuenta {
 	int id;
 	List<Titular> titulares;
-	Titular t;
 	int saldo=0;
 	String tipoCuenta;
 	
+	public Cuenta(int id, Titular titular, String tipoCuenta) {
+		this.id = id;
+		this.titulares.add(titular);
+		this.tipoCuenta = tipoCuenta;
+	}
 	public Cuenta(int id, List<Titular> titulares, int saldo, String tipoCuenta) {
 		this.id = id;
 		this.titulares = titulares;
 		this.saldo = saldo;
 		this.tipoCuenta = tipoCuenta;
-	}
-	public Cuenta(int id, Titular t, int saldo, String tipoCuenta) {
+	}	
+	public Cuenta(int id, List<Titular> titulares, String tipoCuenta) {
 		this.id = id;
-		this.t = t;
-		this.saldo = saldo;
-		this.tipoCuenta = tipoCuenta;
-	}
-	public Cuenta(int id, Titular t, String tipoCuenta) {
-		this.id = id;
-		this.t = t;
+		this.titulares = titulares;
 		this.tipoCuenta = tipoCuenta;
 	}
 	public Cuenta () {		
@@ -44,7 +42,7 @@ public class Cuenta {
 		return titulares.get(0);
 	}
 	public void setT(Titular t) {
-		this.t = t;
+		titulares.add(t);
 	}
 	public int getSaldo() {
 		return saldo;

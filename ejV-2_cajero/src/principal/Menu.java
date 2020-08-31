@@ -48,12 +48,14 @@ public class Menu {
 			case 5:
 				System.out.println("Introduzca el número de cuenta de destino: ");
 				int destino=Integer.parseInt(sc.nextLine());
-				if (null!=servicio.existeCuenta(destino)) {
-					System.out.println("Ingrese la cantidad a transferir");
-					if (servicio.transferir(cuenta,destino,Integer.parseInt(sc.nextLine())))
-							System.out.println("Se realizó la transferencia correctamente.");;
+				if (null!=servicio.existeCuenta(destino)) {					
+					if (servicio.existeCuenta(cuenta).getId()!=servicio.existeCuenta(destino).getId()) {
+						System.out.println("Ingrese la cantidad a transferir");
+						if (servicio.transferir(cuenta,destino,Integer.parseInt(sc.nextLine())))
+							System.out.println("Se realizó la transferencia correctamente.");
+				} else System.out.println("No es posible transferirse a la misma cuenta.");
 				} else System.out.println("No existe esa cuenta de destino.");
-				break;
+					break;
 			case 0:
 				System.out.println("Has salido. ¡Hasta luego!");
 				break;
