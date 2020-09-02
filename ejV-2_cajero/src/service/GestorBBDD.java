@@ -93,9 +93,13 @@ public class GestorBBDD {
 		}
 		return false;
 	}
+	// TODO no funciona, pensar
 	public List<Cuenta> mostrarCuentas () {
 		List<Cuenta> cuentas = new ArrayList<>();
 		List<Titular> titulares=new ArrayList<>();
+		int id=0;
+		int saldo=0;
+		String tipoCuenta="";
 		try (Connection conn=Datos.getConnection()){
 			String sql="SELECT idCuenta AS id,dni,nombre,direccion,telefono,saldo,tipocuenta "
 					+ "FROM bancabd.titulares INNER JOIN bancabd.clientes ON clientes.dni=titulares.idCliente "
@@ -103,14 +107,14 @@ public class GestorBBDD {
 			PreparedStatement ps = conn.prepareStatement(sql);						
 			ResultSet rs=ps.executeQuery();
 			while(rs.next()) {
-				int id = rs.getInt("id");
-				int saldo = rs.getInt("saldo");
-				String tipoCuenta = rs.getString("tipocuenta");
-				titulares.add(new Titular(
-						rs.getInt("dni"),
-						rs.getString("nombre"),
-						rs.getString("direccion"),
-						rs.getInt("telefono")));				
+				Titular t1 = new Titular(rs.getInt("dni"),rs.getString("nombre"),rs.getString("direccion"),rs.getInt("telefono"));
+				id=id==rs.getInt("id")?id:rs.getInt("id");
+				if (!titulares.contains(t1)&&id==rs.getInt("id")) {
+					titulares.add(t1);
+					continue;
+				}				
+				saldo=saldo==rs.getInt("saldo")?saldo:rs.getInt("saldo");
+				tipoCuenta=tipoCuenta==rs.getString("tipocuenta")?tipoCuenta:rs.getString("tipocuenta");				
 				Cuenta unaCuenta = new Cuenta(id,titulares,saldo,tipoCuenta);
 				cuentas.add(unaCuenta);
 			}
