@@ -1,6 +1,5 @@
 package service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,17 +48,7 @@ public abstract class BaseService {
 			.filter(p->p.getRegion().equalsIgnoreCase(region))
 			.mapToLong(Pais::getPoblacion)
 			.sum();
-	}
-	/*
-	public Double poblacionMediaRegion (String region) {		
-		Integer paises=(int) paisesEnRegion(region).stream()
-				.count();
-		System.out.println("Hay "+paises+" países.");
-		Long poblacionTotal= paisesEnRegion(region).stream()
-				.collect(Collectors.summingLong(p->p.getPoblacion()));
-		System.out.println("Población total: "+poblacionTotal);
-		return (double) (poblacionTotal/paises);
-	}*/
+	}	
 	public Map<String,List<Pais>> paisesPorRegion() {
 		return getStream()
 				.collect(Collectors.groupingBy(Pais::getRegion));
