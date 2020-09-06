@@ -1,11 +1,7 @@
 package principal;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Scanner;
-
-import service.BaseService;
 import service.GestorBBDD;
-import service.JsonService;
 
 public class Menu {
 
