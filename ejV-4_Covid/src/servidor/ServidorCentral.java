@@ -11,20 +11,19 @@ public class ServidorCentral {
 
 	public static void main(String[] args) {
 		System.out.println("Esperando pedidos de las comunidades...");
-		ExecutorService exec = Executors.newCachedThreadPool(); 
-		
+		ExecutorService exec = Executors.newCachedThreadPool();		
 	try (ServerSocket servidor = new ServerSocket(8100)) {
-		servidor.setSoTimeout(9000);
+		servidor.setSoTimeout(7000);
 		while (!servidor.isClosed()) {
 		Socket sc=servidor.accept();		
-		System.out.println("Llamada recibida desde el 8100.");
+		System.out.println("Llamada recibida desde el 8100.");		
 		exec.submit(new HiloUnCliente(sc));		
-		}
+		}		
 	} catch (SocketTimeoutException so) {
-		System.out.println("Se ha agotado el tiempo de atender consultas.");		
+		System.out.println("Se ha agotado el tiempo de atender consultas.");
+		exec.shutdown();
 	} catch (IOException e) {
 		e.printStackTrace();
+	} 
 	}
-	}
-
 }
