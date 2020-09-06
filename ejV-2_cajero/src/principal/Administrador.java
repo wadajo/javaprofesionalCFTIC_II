@@ -1,10 +1,8 @@
 package principal;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import model.Cuenta;
 import model.Titular;
 import service.GestorBBDD;
@@ -15,8 +13,6 @@ public class Administrador {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		int selector = 0;
-		GestorBBDD servicio = new GestorBBDD();
-		DateTimeFormatter personalizado = DateTimeFormatter.ofPattern("EEEE dd 'de' LLL 'Hora 'HH:mm:ss");
 
 		System.out.println("--Administración Cajero Virtual--");		
 	
